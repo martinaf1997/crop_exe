@@ -1,0 +1,40 @@
+name: Build Windows EXE
+
+# Il workflow parte ogni volta che carichi modifiche (push) sul branch main,
+# oppure puoi avviarlo manualmente dalla scheda Actions
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest   # <-- questa riga è la chiave: build su Windows vero
+
+    steps:
+      - name: Scarica il codice del repository
+        uses: actions/checkout@v4
+
+      - name: Imposta Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installa le dipendenze
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          if (Test-Path requirements.txt) { pip install -r requirements.txt }
+        shell: pwsh
+
+      - name: Compila l'eseguibile
+        run: pyinstaller --onefile script.py
+        shell: pwsh
+        # Se il tuo file si chiama diversamente, cambia "script.py" col nome giusto.
+        # --onefile crea un unico file .exe (più comodo, ma un po' più lento all'avvio)
+
+      - name: Carica l'eseguibile come artifact scaricabile
+        uses: actions/upload-artifact@v4
+        with:
+          name: mio-eseguibile-windows
+          path: dist/*.exe
