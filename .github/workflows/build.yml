@@ -28,7 +28,7 @@ jobs:
         shell: pwsh
 
       - name: Compila l'eseguibile
-        run: pyinstaller --onefile script.py
+        run: pyinstaller --onefile 1_analysis.py
         shell: pwsh
         # Se il tuo file si chiama diversamente, cambia "script.py" col nome giusto.
         # --onefile crea un unico file .exe (più comodo, ma un po' più lento all'avvio)
