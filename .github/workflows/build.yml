@@ -28,10 +28,15 @@ jobs:
         shell: pwsh
 
       - name: Compila l'eseguibile
-        run: pyinstaller --onefile 1_analysis.py
+        run: pyinstaller --onefile --hidden-import=tkinter 1_analysis.py
         shell: pwsh
         # Se il tuo file si chiama diversamente, cambia "script.py" col nome giusto.
         # --onefile crea un unico file .exe (più comodo, ma un po' più lento all'avvio)
+        # --hidden-import=tkinter assicura che il file-picker della cartella funzioni
+        #
+        # Se in futuro l'exe desse errori legati a shapely o scipy (moduli non trovati,
+        # DLL mancanti come geos_c.dll), si possono aggiungere altri hidden-import così:
+        # pyinstaller --onefile --hidden-import=tkinter --hidden-import=shapely --collect-all shapely script.py
 
       - name: Carica l'eseguibile come artifact scaricabile
         uses: actions/upload-artifact@v4
