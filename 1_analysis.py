@@ -7,11 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1tcuFnoTy9zG9ehHsm4v8LWh0uEuC08Ic
 """
 
-from google.colab import drive
-drive.mount('/content/drive')
-
-!pip install -r /content/drive/MyDrive/req.txt
-
 # -*- coding: utf-8 -*-
 """
 1_analysis.py  —  Identify RT targets, detect PTV cropping, export crop_analysis.xlsx.
@@ -37,15 +32,23 @@ from glob import glob
 from scipy import stats
 from shapely.geometry import Point, Polygon
 
-# ── Configuration ─────────────────────────────────────────────────────────────
-MAINFOLDER   = '/content/drive/MyDrive/ColabNotebooks/crop/'
-DATASET_PATH = os.path.join(MAINFOLDER, 'dataset_grande', 'dati_estratti')
-CROP_THRESHOLD = 0.10   # fraction of PTV points that must be cropped to flag
-
+import tkinter as tk
+from tkinter import filedialog
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Helper utilities
 # ══════════════════════════════════════════════════════════════════════════════
+
+def scegli_cartella() -> str:
+    """Apre una finestra per selezionare la cartella di lavoro (MAINFOLDER)."""
+    root = tk.Tk()
+    root.withdraw()          # nasconde la finestra vuota di tkinter
+    root.attributes('-topmost', True)  # porta il dialog in primo piano
+    cartella = filedialog.askdirectory(title="Seleziona la cartella principale (MAINFOLDER)")
+    root.destroy()
+    if not cartella:
+        raise SystemExit("Nessuna cartella selezionata — script interrotto.")
+    return cartella
 
 def trova_file_con_prefisso(cartella_base: str, prefisso: str) -> list[str]:
     """Recursively find all files whose name starts with *prefisso*."""
@@ -260,6 +263,12 @@ def get_mean_dose_per_roi(uid_to_files: dict, studyUID: str,
     return mean_doses
 
 
+# ── Configuration ─────────────────────────────────────────────────────────────
+MAINFOLDER   = scegli_cartella() + '/'
+DATASET_PATH = os.path.join(MAINFOLDER, 'dataset_grande', 'dati_estratti')
+CROP_THRESHOLD = 0.10   # fraction of PTV points that must be cropped to flag
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Step 1 — Build uid_to_files index
 # ══════════════════════════════════════════════════════════════════════════════
@@ -406,7 +415,7 @@ for key, value in filtered.items():
             filtered[key]["Name"]   = list(names)
             filtered[key]["Number"] = list(numbers)
 
-display(pd.DataFrame.from_dict(filtered, orient="index"))
+print(pd.DataFrame.from_dict(filtered, orient="index"))
 
 # Separate ITV/CTV from PTV and check counts match
 final_clean_data:    dict = {}
@@ -472,7 +481,7 @@ for studyUID, value in mismatched_data.items():
 
 final_clean_data.update(fixed_mismatched)
 df1 = pd.DataFrame.from_dict(final_clean_data, orient="index")
-display(df1)
+print(df1)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -583,14 +592,10 @@ for j in study_UIDS:
 # ══════════════════════════════════════════════════════════════════════════════
 
 df2 = pd.DataFrame.from_dict(study_to_crop, orient="index")
-display(df2)
+print(df2)
 df2.to_excel(MAINFOLDER + 'crop_analysis_new.xlsx')
 
 df3 = pd.DataFrame.from_dict(uid_to_files, orient="index")
 df3.to_excel(MAINFOLDER + 'uid_to_files_new.xlsx')
 
 print("\n✅  Saved crop_analysis_new.xlsx and uid_to_files_new.xlsx")
-
-from google.colab import sheets
-sheet = sheets.InteractiveSheet(df=df1)
-
