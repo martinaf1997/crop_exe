@@ -557,6 +557,9 @@ for j in study_UIDS:
         ptv_nums  = row["PTV_Number"]
 
         if len(ctv_list) > 1:
+            print(f"Skipped: {len(ctv_list)} CTV found, multiple-target pairing not handled yet.")
+            continue
+            '''
             # Multiple targets — show both lists with names AND numbers so the
             # user can see which structures to pair, then reorder PTVs to match.
             print(f"\n  Multiple ITV/CTV ({len(ctv_list)}) found — please pair each PTV to its CTV.\n")
@@ -577,6 +580,7 @@ for j in study_UIDS:
                               ctv_list[t], ctv_nums[t],
                               ptv_list[t], ptv_nums[t],
                               study_to_crop)
+            '''
         else:
             _analyse_pair(j, row, contour,
                           ctv_list[0], ctv_nums[0],
