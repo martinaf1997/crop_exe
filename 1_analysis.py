@@ -463,6 +463,9 @@ for studyUID, value in mismatched_data.items():
             "PTV_Number": top_ptv,
         }
     else:
+        print(f"Skipped: Mismatch")
+            continue
+        '''
         # Manual fallback
         print(f"\n⚠️  MISMATCH in {studyUID}")
         print(f"  ITV/CTV:  {itv_ctv_list}  {itv_ctv_numbers}")
@@ -478,6 +481,7 @@ for studyUID, value in mismatched_data.items():
             "ITV/CTV": itv_ctv_list, "ITV/CTV_Number": itv_ctv_numbers,
             "PTV": sel_names, "PTV_Number": top_ptv,
         }
+        '''
 
 final_clean_data.update(fixed_mismatched)
 df1 = pd.DataFrame.from_dict(final_clean_data, orient="index")
