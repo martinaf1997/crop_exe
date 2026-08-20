@@ -463,25 +463,28 @@ for studyUID, value in mismatched_data.items():
             "PTV_Number": top_ptv,
         }
     else:
-        print(f"Skipped: Mismatch")
-        continue
-        '''
+        
         # Manual fallback
         print(f"\n⚠️  MISMATCH in {studyUID}")
-        print(f"  ITV/CTV:  {itv_ctv_list}  {itv_ctv_numbers}")
+        print(f"  ITV/CTV:  {itv_ctv_list}")
         print(f"  PTV:      {ptv_list}  {ptv_numbers}")
 
-        itv_ctv_list    = input("Select ITV/CTV names (comma-separated): ").split(',')
-        itv_ctv_numbers = input("Select ITV/CTV numbers (comma-separated): ").split(',')
-        sel_names       = input("Select PTV names (comma-separated): ").split(',')
         top_ptv         = input("Select PTV numbers (comma-separated): ").split(',')
+        sel_names = []
+
+        for tp in top_ptv:
+            sn = ptv_list[ptv_numbers.index(tp)]
+            sel_names.append(sn)
+
+        print(f"  new PTV list:      {sel_names}  {top_ptv}")
+
 
         fixed_mismatched[studyUID] = {
             "Prescription": value["Prescription"], "Plan": value["Plan"],
             "ITV/CTV": itv_ctv_list, "ITV/CTV_Number": itv_ctv_numbers,
             "PTV": sel_names, "PTV_Number": top_ptv,
         }
-        '''
+        
 
 final_clean_data.update(fixed_mismatched)
 df1 = pd.DataFrame.from_dict(final_clean_data, orient="index")
