@@ -34,6 +34,9 @@ from shapely.geometry import Polygon, MultiPoint
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
+import tkinter as tk
+from tkinter import filedialog
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Core functions
