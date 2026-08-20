@@ -9,3 +9,4 @@ scikit-image
 matplotlib
 scikit-survival
 lifelines
+openpyxl
