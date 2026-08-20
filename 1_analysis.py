@@ -466,23 +466,31 @@ for studyUID, value in mismatched_data.items():
         
         # Manual fallback
         print(f"\n⚠️  MISMATCH in {studyUID}")
-        print(f"  ITV/CTV:  {itv_ctv_list}")
+        print(f"  ITV/CTV:  {itv_ctv_list} {itv_ctv_numbers}")
         print(f"  PTV:      {ptv_list}  {ptv_numbers}")
 
-        top_ptv         = input("Select PTV numbers (comma-separated): ").split(',')
-        sel_names = []
+        top_ctv     = input("Select CTV numbers (comma-separated): ").split(',')
+        top_ptv     = input("Select PTV numbers (comma-separated): ").split(',')
+        
+        sel_names_ptv = []
+        sel_names_ctv = []
 
         for tp in top_ptv:
             sn = ptv_list[ptv_numbers.index(tp)]
-            sel_names.append(sn)
+            sel_names_ptv.append(sn)
 
-        print(f"  new PTV list:      {sel_names}  {top_ptv}")
+        for tc in top_ctv:
+            sn = itv_ctv_list[itv_ctv_numbers.index(tc)]
+            sel_names_ctv.append(sn)
+
+        print(f"  new CTV list:      {sel_names_ctv}  {top_ctv}")
+        print(f"  new PTV list:      {sel_names_ptv}  {top_ptv}")
 
 
         fixed_mismatched[studyUID] = {
             "Prescription": value["Prescription"], "Plan": value["Plan"],
-            "ITV/CTV": itv_ctv_list, "ITV/CTV_Number": itv_ctv_numbers,
-            "PTV": sel_names, "PTV_Number": top_ptv,
+            "ITV/CTV": sel_names_ctv, "ITV/CTV_Number": top_ctv,
+            "PTV": sel_names_ptv, "PTV_Number": top_ptv,
         }
         
 
