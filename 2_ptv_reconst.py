@@ -7,11 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/12dGYvbM81052HN1rCRhc5vi34lUNbF8P
 """
 
-from google.colab import drive
-drive.mount('/content/drive')
-
-!pip install -r /content/drive/MyDrive/req.txt
-
 # -*- coding: utf-8 -*-
 """
 2_ptv_reconstruct.py  —  Rebuild cropped PTVs via 3-D margin expansion.
@@ -38,9 +33,6 @@ from skimage import measure
 from shapely.geometry import Polygon, MultiPoint
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-
-# ── Configuration ─────────────────────────────────────────────────────────────
-MAINFOLDER = '/content/drive/MyDrive/ColabNotebooks/crop/'
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -211,6 +203,21 @@ def _fix_roi_numbers(rtstruct, roi_name: str) -> bool:
     return updated_contour
 
 
+def scegli_cartella() -> str:
+    """Apre una finestra per selezionare la cartella di lavoro (MAINFOLDER)."""
+    root = tk.Tk()
+    root.withdraw()          # nasconde la finestra vuota di tkinter
+    root.attributes('-topmost', True)  # porta il dialog in primo piano
+    cartella = filedialog.askdirectory(title="Seleziona la cartella principale (MAINFOLDER)")
+    root.destroy()
+    if not cartella:
+        raise SystemExit("Nessuna cartella selezionata — script interrotto.")
+    return cartella
+
+# ── Configuration ─────────────────────────────────────────────────────────────
+MAINFOLDER   = scegli_cartella() + '/'
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Main loop
 # ══════════════════════════════════════════════════════════════════════════════
@@ -218,8 +225,8 @@ def _fix_roi_numbers(rtstruct, roi_name: str) -> bool:
 df_uidtofiles = pd.read_excel(MAINFOLDER + 'uid_to_files_new.xlsx',    index_col=0, engine='openpyxl')
 df_crop       = pd.read_excel(MAINFOLDER + 'crop_analysis_new.xlsx',   index_col=0, engine='openpyxl')
 
-display(df_uidtofiles)
-display(df_crop)
+print(df_uidtofiles)
+print(df_crop)
 
 for index, row in df_crop.iterrows():
     # Normalise index: strip trailing "_n?" suffix to get the base UID key
