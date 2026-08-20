@@ -464,7 +464,7 @@ for studyUID, value in mismatched_data.items():
         }
     else:
         print(f"Skipped: Mismatch")
-            continue
+        continue
         '''
         # Manual fallback
         print(f"\n⚠️  MISMATCH in {studyUID}")
