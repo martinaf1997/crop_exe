@@ -28,7 +28,7 @@ jobs:
         shell: pwsh
 
       - name: Compila l'eseguibile
-        run: pyinstaller --onefile --hidden-import=tkinter 1_Analysis.py
+        run: pyinstaller --onefile --hidden-import=tkinter 1_analysis.py
         shell: pwsh
 
       - name: Carica l'eseguibile come artifact scaricabile
