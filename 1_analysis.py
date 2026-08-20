@@ -34,6 +34,7 @@ from shapely.geometry import Point, Polygon
 
 import tkinter as tk
 from tkinter import filedialog
+from pathlib import Path
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Helper utilities
@@ -286,7 +287,7 @@ uid_to_files: dict = {}
 study_UIDS:   list = []
 
 for rs_path in file_RS:
-    parts = rs_path.split('/')
+    parts = Path(rs_path).parts
     uid = parts[-2] if parts[-2] == parts[-3] else f"{parts[-3]}_{parts[-2]}"
 
     # Find matching RP / RD by sharing the same parent folder
