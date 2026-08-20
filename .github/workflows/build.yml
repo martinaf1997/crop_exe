@@ -28,7 +28,7 @@ jobs:
         shell: pwsh
 
       - name: Compila l'eseguibile
-        run: pyinstaller --onefile --hidden-import=tkinter 2_PTV_reconst.py
+        run: pyinstaller --onefile --hidden-import=tkinter 1_Analysis.py
         shell: pwsh
 
       - name: Carica l'eseguibile come artifact scaricabile
