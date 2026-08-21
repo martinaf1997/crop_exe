@@ -390,7 +390,7 @@ KEYWORDS = {'CTV', 'PTV', 'ITV'}
 
 # Exact upper-cased names to exclude even if they contain a keyword.
 # Add any other names you want globally ignored here.
-EXCLUDED_NAMES = {'CTV_IN'}
+EXCLUDED_NAMES = {'CTV_IN', 'CTV_ININ'}
 
 # Keep only ROIs whose name contains a known keyword AND is not excluded.
 # The exclusion check uses startswith so "CTV_in", "CTV_IN", "CTV_in_something"
