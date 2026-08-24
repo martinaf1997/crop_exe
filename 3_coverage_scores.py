@@ -21,6 +21,8 @@ import tkinter as tk
 from tkinter import filedialog
 
 
+BIN_SIZE   = 0.1   # Gy — DVH bin width
+
 # ══════════════════════════════════════════════════════════════════════════════
 # DICOM loaders
 # ══════════════════════════════════════════════════════════════════════════════
@@ -167,21 +169,20 @@ def compute_dvh_metrics(dose: np.ndarray, mask: np.ndarray,
         CCI=d99 / prescribed_dose if prescribed_dose else float('nan'),
     )
 
-    def scegli_cartella() -> str:
-        """Apre una finestra per selezionare la cartella di lavoro (MAINFOLDER)."""
-        root = tk.Tk()
-        root.withdraw()          # nasconde la finestra vuota di tkinter
-        root.attributes('-topmost', True)  # porta il dialog in primo piano
-        cartella = filedialog.askdirectory(title="Seleziona la cartella principale (MAINFOLDER)")
-        root.destroy()
-        if not cartella:
-            raise SystemExit("Nessuna cartella selezionata — script interrotto.")
-    return cartella
+def scegli_cartella() -> str:
+    """Apre una finestra per selezionare la cartella di lavoro (MAINFOLDER)."""
+    root = tk.Tk()
+    root.withdraw()          # nasconde la finestra vuota di tkinter
+    root.attributes('-topmost', True)  # porta il dialog in primo piano
+    cartella = filedialog.askdirectory(title="Seleziona la cartella principale (MAINFOLDER)")
+    root.destroy()
+    if not cartella:
+        raise SystemExit("Nessuna cartella selezionata — script interrotto.")
+return cartella
 
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 MAINFOLDER   = scegli_cartella() + '/'
-BIN_SIZE   = 0.1   # Gy — DVH bin width
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Main loop
@@ -189,7 +190,7 @@ BIN_SIZE   = 0.1   # Gy — DVH bin width
 
 df_crop  = pd.read_excel(MAINFOLDER + 'crop_analysis_new.xlsx', index_col=0, engine='openpyxl')
 df_files = pd.read_excel(MAINFOLDER + 'uid_to_files_new.xlsx',  index_col=0, engine='openpyxl')
-display(df_crop)
+print(df_crop)
 
 # Columns we will write (initialised to NaN so unfilled rows stay clean)
 METRIC_COLS = [
@@ -278,7 +279,7 @@ for index, row in df_crop.iterrows():
         print(f"❌ Error in {index}: {e}")
 
 # ── Replace NaN with '-' for display only, keep numeric for saving ────────────
-display(df_crop.fillna('-'))
+print(df_crop.fillna('-'))
 
 # Drop helper ID columns that were only needed internally
 for col in ('ITV/CTV ID', 'PTV ID'):
