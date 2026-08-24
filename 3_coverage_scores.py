@@ -178,7 +178,7 @@ def scegli_cartella() -> str:
     root.destroy()
     if not cartella:
         raise SystemExit("Nessuna cartella selezionata — script interrotto.")
-return cartella
+    return cartella
 
 
 # ── Configuration ─────────────────────────────────────────────────────────────
