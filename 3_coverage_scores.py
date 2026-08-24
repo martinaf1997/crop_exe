@@ -20,10 +20,6 @@ from matplotlib.path import Path
 import tkinter as tk
 from tkinter import filedialog
 
-# ── Configuration ─────────────────────────────────────────────────────────────
-MAINFOLDER = '/content/drive/MyDrive/ColabNotebooks/crop/'
-BIN_SIZE   = 0.1   # Gy — DVH bin width
-
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DICOM loaders
@@ -171,6 +167,21 @@ def compute_dvh_metrics(dose: np.ndarray, mask: np.ndarray,
         CCI=d99 / prescribed_dose if prescribed_dose else float('nan'),
     )
 
+    def scegli_cartella() -> str:
+        """Apre una finestra per selezionare la cartella di lavoro (MAINFOLDER)."""
+        root = tk.Tk()
+        root.withdraw()          # nasconde la finestra vuota di tkinter
+        root.attributes('-topmost', True)  # porta il dialog in primo piano
+        cartella = filedialog.askdirectory(title="Seleziona la cartella principale (MAINFOLDER)")
+        root.destroy()
+        if not cartella:
+            raise SystemExit("Nessuna cartella selezionata — script interrotto.")
+    return cartella
+
+
+# ── Configuration ─────────────────────────────────────────────────────────────
+MAINFOLDER   = scegli_cartella() + '/'
+BIN_SIZE   = 0.1   # Gy — DVH bin width
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Main loop
