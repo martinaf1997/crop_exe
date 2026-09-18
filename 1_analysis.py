@@ -466,7 +466,7 @@ for studyUID, value in mismatched_data.items():
         risposta = input("Select CTV numbers (comma-separated, or 's' to skip): ").strip()
 
         if risposta.lower() in ('s', 'skip', 'salta'):
-            print(f"Studio {studyUID} escluso su richiesta dell'utente")
+            print(f"Study {studyUID} removed")
             skipped_studies.append(studyUID)
             study_to_target.pop(studyUID, None)
             filtered.pop(studyUID, None)
