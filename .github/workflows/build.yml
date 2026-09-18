@@ -28,7 +28,7 @@ jobs:
         shell: pwsh
 
       - name: Compila l'eseguibile
-        run: pyinstaller --onefile --hidden-import=tkinter 3_coverage_scores.py      #<-----INSERIRE NOME .PY QUI
+        run: pyinstaller --onefile --hidden-import=tkinter 1_analysis.py      #<-----INSERIRE NOME .PY QUI
         shell: pwsh
 
       - name: Carica l'eseguibile come artifact scaricabile
