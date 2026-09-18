@@ -429,6 +429,8 @@ for key, value in filtered.items():
 # Auto-resolve mismatches: pick the top-N highest-dose PTVs
 fixed_mismatched: dict = {}
 
+skipped_studies: list = []
+
 for studyUID, value in mismatched_data.items():
     itv_ctv_list    = value["ITV/CTV"]
     itv_ctv_numbers = value["ITV/CTV_Number"]
@@ -459,9 +461,22 @@ for studyUID, value in mismatched_data.items():
         print(f"\n⚠️  MISMATCH in {studyUID}")
         print(f"  ITV/CTV:  {itv_ctv_list} {itv_ctv_numbers}")
         print(f"  PTV:      {ptv_list}  {ptv_numbers}")
+        print("  (Press 's' to skip)")
 
-        top_ctv     = input("Select CTV numbers (comma-separated): ").split(',')
-        top_ptv     = input("Select PTV numbers (comma-separated): ").split(',')
+        risposta = input("Select CTV numbers (comma-separated, or 's' to skip): ").strip()
+
+        if risposta.lower() in ('s', 'skip', 'salta'):
+            print(f"Studio {studyUID} escluso su richiesta dell'utente")
+            skipped_studies.append(studyUID)
+            study_to_target.pop(studyUID, None)
+            filtered.pop(studyUID, None)
+            final_clean_data.pop(studyUID, None)
+            if studyUID in study_UIDS:
+                study_UIDS.remove(studyUID)
+            continue
+
+        top_ctv = risposta.split(',')
+        top_ptv = input("Select PTV numbers (comma-separated): ").split(',')
         
         sel_names_ptv = []
         sel_names_ctv = []
@@ -551,6 +566,9 @@ def _analyse_pair(study_key: str, row: pd.Series, contour,
 study_to_crop: dict = {}
 
 for j in study_UIDS:
+
+    if j not in df1.index: continue
+  
     print(f"\n── Study {j}")
     try:
         rs_path = ottieni_file_da_uid(uid_to_files, j, 'RS')
