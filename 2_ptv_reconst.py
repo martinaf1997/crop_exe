@@ -55,7 +55,7 @@ class Tee:
         for s in self.streams:
             s.flush()
 
-log_filename = f"log_{datetime.datetime.now():%Y%m%d_%H%M%S}.txt"
+log_filename = f"log_2_ptv_reconst_{datetime.datetime.now():%Y%m%d_%H%M%S}.txt"
 log_file = open(log_filename, "w", encoding="utf-8")
 sys.stdout = Tee(sys.stdout, log_file)
 sys.stderr = Tee(sys.stderr, log_file)
