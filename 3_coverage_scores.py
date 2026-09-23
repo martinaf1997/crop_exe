@@ -20,6 +20,30 @@ from matplotlib.path import Path
 import tkinter as tk
 from tkinter import filedialog
 
+import sys
+import datetime
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Log file
+# ══════════════════════════════════════════════════════════════════════════════
+
+class Tee:
+    """Scrive contemporaneamente su terminale e su file."""
+    def __init__(self, *streams):
+        self.streams = streams
+    def write(self, data):
+        for s in self.streams:
+            s.write(data)
+            s.flush()
+    def flush(self):
+        for s in self.streams:
+            s.flush()
+
+log_filename = f"log_3_coverage_scores_{datetime.datetime.now():%Y%m%d_%H%M%S}.txt"
+log_file = open(log_filename, "w", encoding="utf-8")
+sys.stdout = Tee(sys.stdout, log_file)
+sys.stderr = Tee(sys.stderr, log_file)
+
 
 BIN_SIZE   = 0.1   # Gy — DVH bin width
 
