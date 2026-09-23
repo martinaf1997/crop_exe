@@ -22,6 +22,8 @@ For every study flagged as Crop=Yes in crop_analysis.xlsx:
 # ── Standard imports ──────────────────────────────────────────────────────────
 import os
 import shutil
+import sys
+import datetime
 
 import numpy as np
 import pandas as pd
@@ -36,6 +38,27 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 import tkinter as tk
 from tkinter import filedialog
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Log file
+# ══════════════════════════════════════════════════════════════════════════════
+
+class Tee:
+    """Scrive contemporaneamente su terminale e su file."""
+    def __init__(self, *streams):
+        self.streams = streams
+    def write(self, data):
+        for s in self.streams:
+            s.write(data)
+            s.flush()
+    def flush(self):
+        for s in self.streams:
+            s.flush()
+
+log_filename = f"log_{datetime.datetime.now():%Y%m%d_%H%M%S}.txt"
+log_file = open(log_filename, "w", encoding="utf-8")
+sys.stdout = Tee(sys.stdout, log_file)
+sys.stderr = Tee(sys.stderr, log_file)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
